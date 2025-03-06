@@ -5,7 +5,7 @@ import pymysql
 import time
 import pandas
 
-# Establish Database Connection
+
 def connect_database():
     def connect():
         try:
@@ -18,7 +18,7 @@ def connect_database():
             )
             mycursor = con.cursor()
 
-            # Create Table If Not Exists
+          
             query = """
             CREATE TABLE IF NOT EXISTS player (
                 playerid INT NOT NULL PRIMARY KEY,
@@ -31,7 +31,7 @@ def connect_database():
             mycursor.execute(query)
             messagebox.showinfo("Success", "Database Connected Successfully!", parent=connectwindow)
 
-            # Enable Buttons
+            
             addplayerButton.config(state=NORMAL)
             searchplayerButton.config(state=NORMAL)
             updateplayerButton.config(state=NORMAL)
@@ -85,7 +85,7 @@ def export_data():
         table.to_csv(url,index=False)
         messagebox.showinfo("Success","Data is saved successfully")
 
-# Toplevel window for updating player
+
 def toplevel_data(title,button_text,command):
     global playeridEntry, emailEntry, nameEntry, dobEntry, genderEntry, screen
      
@@ -144,7 +144,7 @@ def show_player():
         playerTable.insert("", END, values=data)
 
 def delete_player():
-    indexing = playerTable.focus()  # row selection
+    indexing = playerTable.focus() 
     content = playerTable.item(indexing)
     content_id = content["values"][0]
     query = "DELETE FROM player WHERE playerid=%s"
@@ -154,7 +154,7 @@ def delete_player():
     show_player()
 
 def search_data():
-    # Creating search window inside the search_data function
+    
     search_window = Toplevel()
     search_window.title("Search Player")
     search_window.geometry("400x300+730+230")
@@ -182,7 +182,7 @@ def search_data():
 
     ttk.Button(search_window, text="Search", width=20, command=perform_search).grid(row=7, column=1, pady=15)
 
-# Function to Add Player
+
 def add_data():
     try:
         query = "INSERT INTO player (playerid, name, email, gender, dob) VALUES (%s, %s, %s, %s, %s)"
@@ -212,7 +212,7 @@ def clock():
 
 clock()
 
-# Add player, show player, etc. buttons
+
 addplayerButton = ttk.Button(root, text="Add Player", width=20, state=DISABLED, command=lambda:toplevel_data("Add player","Add ",add_data))
 addplayerButton.place(x=50, y=80)
 
@@ -236,7 +236,7 @@ exitButton.place(x=50, y=430)
 
 ttk.Button(root, text="Connect to Database", command=connect_database).place(x=50, y=500)
 
-# Player table display
+
 playerTable = ttk.Treeview(root, columns=("playerid", "name", "email", "gender", "dob"), height=15, show="headings")
 playerTable.place(x=350, y=80)
 
@@ -246,7 +246,7 @@ playerTable.heading("email", text="Email")
 playerTable.heading("gender", text="Gender")
 playerTable.heading("dob", text="DOB")
 
-# Scrollbars
+
 vertical_scroll = ttk.Scrollbar(root, orient="vertical", command=playerTable.yview)
 vertical_scroll.place(x=1050, y=80, height=350)
 playerTable.config(yscrollcommand=vertical_scroll.set)

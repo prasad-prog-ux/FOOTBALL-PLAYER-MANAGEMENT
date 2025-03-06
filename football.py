@@ -42,7 +42,7 @@ from tkinter import messagebox
 # # Run the GUI
 # window.mainloop()
 
-
+#login as temp
 def login():
     if  usernamentry.get()=="" or passwordentry.get()=="":
         messagebox.showerror("Error","Please fill the details")

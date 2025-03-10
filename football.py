@@ -21,7 +21,7 @@ def verify_admin_credentials():
     admin_password = passwordentry.get()
 
     # Admin credentials (replace with your actual admin credentials)
-    if admin_username == "admin" and admin_password == "admin123":
+    if admin_username == "MESSI" and admin_password == "10":
         messagebox.showinfo("Success", "Admin Login Successful")
         subprocess.run(['python', 'fb.py'])  # Open fb.py after successful login
     else:
@@ -34,7 +34,7 @@ def verify_admin_credentials():
 
 # Function to handle User Login (opens sign_in.py)
 def user_login():
-    subprocess.run(['python', 'sign_in.py'])  # Opens sign_in.py for User
+    subprocess.run(['python', 'signin.py'])  # Opens sign_in.py for User
     
 # Function to handle login (for the main window)
 def login():
@@ -51,7 +51,7 @@ window.title("FOOTBALL PLAYER STATISTICS")
 window.geometry("1350x700+0+0")
 
 # Background Image
-background = Image.open("back.jpg")  
+background = Image.open("back_fb.jpg")  
 background = background.resize((1350, 700))  
 background = ImageTk.PhotoImage(background)
 bgLabel = tk.Label(window, image=background)

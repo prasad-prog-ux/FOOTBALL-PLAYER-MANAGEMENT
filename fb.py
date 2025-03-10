@@ -16,7 +16,7 @@ def connect_database():
                 password=passwordEntry.get(),
                 database="footballplayerdata"  
             )
-            mycursor = con.cursor()
+            mycursor = con.cursor() 
 
             query = """
             CREATE TABLE IF NOT EXISTS player (

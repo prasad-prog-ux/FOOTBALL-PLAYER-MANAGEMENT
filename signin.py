@@ -81,7 +81,12 @@ def login_user():
         if row == None:
             messagebox.showerror("Error", "Invalid username or password")
         else:
-            messagebox.showinfo("Success", "Login is successful")    
+            messagebox.showinfo("Success", "Login is successful") 
+            login_window.destroy()  # Close the login window
+            
+            # Open the user panel window
+            import user_panel  # Assuming your user panel code is in user_panel.py
+            user_panel.panel_window.mainloop()   
 
 def signup_page():
     login_window.destroy()

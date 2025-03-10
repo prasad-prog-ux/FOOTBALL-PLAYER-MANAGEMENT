@@ -2,7 +2,16 @@ from tkinter import *
 from PIL import ImageTk
 import pymysql
 from tkinter import messagebox
+def signup_page():
+    login_page.destroy()  # Close the login window
+    try:
+        import signup  # Ensure signup.py exists in the same directory
+    except ImportError:
+        print("Error: signup.py not found!")
 
+    # Open the user panel window after sign up
+    import user_panel  # Assuming your user panel code is in user_panel.py
+    user_panel.panel_window.mainloop()  # Run the user panel windo
 def clear():
     emailEntry.delete(0, END)
     usernameEntry.delete(0, END)

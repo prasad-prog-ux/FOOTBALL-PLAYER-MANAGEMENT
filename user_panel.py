@@ -102,6 +102,32 @@ def generate_toty_card():
     card_label.image = card_img
     card_label.pack(padx=10, pady=10)
 
+# Function to display the feedback form
+def show_feedback_form():
+    feedback_window = tk.Toplevel(panel_window)
+    feedback_window.title("Feedback Form")
+    feedback_window.geometry("400x300")
+    
+    # Feedback form components
+    feedback_label = tk.Label(feedback_window, text="Please provide your feedback below:", font=("Arial", 12))
+    feedback_label.pack(pady=10)
+    
+    feedback_text = tk.Text(feedback_window, width=40, height=8, font=("Arial", 12))
+    feedback_text.pack(pady=10)
+    
+    def submit_feedback():
+        feedback = feedback_text.get("1.0", "end-1c")
+        if feedback.strip() == "":
+            messagebox.showerror("Error", "Feedback cannot be empty.")
+            return
+        # You can save the feedback to a database or a file here
+        # For now, we are just showing it in a message box
+        messagebox.showinfo("Thank You", "Your feedback has been submitted!")
+        feedback_window.destroy()
+
+    submit_button = tk.Button(feedback_window, text="Submit Feedback", font=("Arial", 12), command=submit_feedback)
+    submit_button.pack(pady=10)
+
 # Function to logout
 def logout():
     panel_window.destroy()
@@ -120,6 +146,7 @@ file_menu = tk.Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Options", menu=file_menu)
 file_menu.add_command(label="Refresh", command=fetch_data)
 file_menu.add_command(label="Logout", command=logout)
+file_menu.add_command(label="Feedback", command=show_feedback_form)  # Add option to show feedback form
 
 # Search Section
 search_frame = tk.Frame(panel_window)

@@ -14,24 +14,24 @@ def connect_database():
                 host=hostEntry.get(),
                 user=usernameEntry.get(),
                 password=passwordEntry.get(),
-                database="footballsystem"
+                database="footballplayerdata"  
             )
             mycursor = con.cursor()
 
-          
             query = """
             CREATE TABLE IF NOT EXISTS player (
                 playerid INT NOT NULL PRIMARY KEY,
                 name VARCHAR(100),
-                email VARCHAR(50),
                 gender VARCHAR(30),
-                dob DATE
+                age INT,
+                country VARCHAR(50),
+                club VARCHAR(50),
+                goals_assists VARCHAR(50)
             )
             """
             mycursor.execute(query)
             messagebox.showinfo("Success", "Database Connected Successfully!", parent=connectwindow)
 
-            
             addplayerButton.config(state=NORMAL)
             searchplayerButton.config(state=NORMAL)
             updateplayerButton.config(state=NORMAL)
@@ -44,7 +44,7 @@ def connect_database():
         except Exception as e:
             messagebox.showerror("Error", f"Database Connection Failed: {e}", parent=connectwindow)
 
-    
+
     connectwindow = Toplevel()
     connectwindow.grab_set()  
     connectwindow.geometry("470x250+730+230")
@@ -65,30 +65,32 @@ def connect_database():
 
     ttk.Button(connectwindow, text="Connect", command=connect).grid(row=3, columnspan=2, pady=7)
 
+
 def iexit():
-    result=messagebox.askyesno("Confirm","Do you want to exit? ")
+    result = messagebox.askyesno("Confirm", "Do you want to exit? ")
     if result:
         root.destroy()
     else:
         pass    
 
 def export_data():
-    url=filedialog.askopenfilesfilename(defaultextension=".csv")
+    url = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
 
-    indexing=playerTable.get_children()
-    newlist=[]
-    for index in indexing:
-        content = playerTable.item(index)
-        datalist=content['values']
-        newlist.append(datalist)
-        table=pandas.DataFrame(newlist,columns=["Playerid","Name","DOB","Gender","Email"])
-        table.to_csv(url,index=False)
-        messagebox.showinfo("Success","Data is saved successfully")
+    if url:
+        indexing = playerTable.get_children()
+        newlist = []
+        for index in indexing:
+            content = playerTable.item(index)
+            datalist = content['values']
+            newlist.append(datalist)
+        table = pandas.DataFrame(newlist, columns=["Playerid", "Name", "Gender", "Age", "Country", "Club", "Goals/Assists"])
+        table.to_csv(url, index=False)
+        messagebox.showinfo("Success", "Data is saved successfully")
 
 
-def toplevel_data(title,button_text,command):
-    global playeridEntry, emailEntry, nameEntry, dobEntry, genderEntry, screen
-     
+def toplevel_data(title, button_text, command):
+    global playeridEntry, nameEntry, genderEntry, ageEntry, countryEntry, clubEntry, goals_assistsEntry, screen
+
     screen = Toplevel()
     screen.title("Update Player")
     screen.grab_set()
@@ -102,17 +104,25 @@ def toplevel_data(title,button_text,command):
     nameEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
     nameEntry.grid(row=1, column=1, padx=10, pady=15)
 
-    Label(screen, text="Email", font=("roman", 20, "bold")).grid(row=2, column=0, padx=30, pady=15)
-    emailEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
-    emailEntry.grid(row=2, column=1, padx=10, pady=15)
-
-    Label(screen, text="Gender", font=("roman", 20, "bold")).grid(row=3, column=0, padx=30, pady=15)
+    Label(screen, text="Gender", font=("roman", 20, "bold")).grid(row=2, column=0, padx=30, pady=15)
     genderEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
-    genderEntry.grid(row=3, column=1, padx=10, pady=15)
+    genderEntry.grid(row=2, column=1, padx=10, pady=15)
 
-    Label(screen, text="DOB (YYYY-MM-DD)", font=("roman", 20, "bold")).grid(row=4, column=0, padx=30, pady=15)
-    dobEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
-    dobEntry.grid(row=4, column=1, padx=10, pady=15)
+    Label(screen, text="Age", font=("roman", 20, "bold")).grid(row=3, column=0, padx=30, pady=15)
+    ageEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
+    ageEntry.grid(row=3, column=1, padx=10, pady=15)
+
+    Label(screen, text="Country", font=("roman", 20, "bold")).grid(row=4, column=0, padx=30, pady=15)
+    countryEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
+    countryEntry.grid(row=4, column=1, padx=10, pady=15)
+
+    Label(screen, text="Club", font=("roman", 20, "bold")).grid(row=5, column=0, padx=30, pady=15)
+    clubEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
+    clubEntry.grid(row=5, column=1, padx=10, pady=15)
+
+    Label(screen, text="Goals/Assists", font=("roman", 20, "bold")).grid(row=6, column=0, padx=30, pady=15)
+    goals_assistsEntry = Entry(screen, font=("roman", 20, "bold"), width=24)
+    goals_assistsEntry.grid(row=6, column=1, padx=10, pady=15)
 
     ttk.Button(screen, text=button_text, command=command).grid(row=7, column=2, pady=15)
     if title == "Update player":
@@ -121,19 +131,23 @@ def toplevel_data(title,button_text,command):
         listdata = content["values"]
         playeridEntry.insert(0, listdata[0])
         nameEntry.insert(0, listdata[1])
-        emailEntry.insert(0, listdata[2])
-        genderEntry.insert(0, listdata[3])
-        dobEntry.insert(0, listdata[4])
+        genderEntry.insert(0, listdata[2])
+        ageEntry.insert(0, listdata[3])
+        countryEntry.insert(0, listdata[4])
+        clubEntry.insert(0, listdata[5])
+        goals_assistsEntry.insert(0, listdata[6])
+
 
 def update_data():
-    query = """UPDATE player SET name=%s, email=%s, dob=%s, gender=%s WHERE playerid=%s"""
+    query = """UPDATE player SET name=%s, gender=%s, age=%s, country=%s, club=%s, goals_assists=%s WHERE playerid=%s"""
     mycursor.execute(query, (
-        nameEntry.get(), emailEntry.get(), dobEntry.get(), genderEntry.get(), playeridEntry.get()
+        nameEntry.get(), genderEntry.get(), ageEntry.get(), countryEntry.get(), clubEntry.get(), goals_assistsEntry.get(), playeridEntry.get()
     ))
     con.commit()
     messagebox.showinfo("Success", f"Player ID {playeridEntry.get()} modified successfully.", parent=screen)
     screen.destroy()
     show_player()
+
 
 def show_player():
     query = "SELECT * FROM player"
@@ -142,6 +156,7 @@ def show_player():
     playerTable.delete(*playerTable.get_children())
     for data in fetched_data:
         playerTable.insert("", END, values=data)
+
 
 def delete_player():
     indexing = playerTable.focus() 
@@ -153,8 +168,9 @@ def delete_player():
     messagebox.showinfo("Deleted", f"Player ID {content_id} deleted successfully.")
     show_player()
 
+
 def search_data():
-    
+
     search_window = Toplevel()
     search_window.title("Search Player")
     search_window.geometry("400x300+730+230")
@@ -185,9 +201,9 @@ def search_data():
 
 def add_data():
     try:
-        query = "INSERT INTO player (playerid, name, email, gender, dob) VALUES (%s, %s, %s, %s, %s)"
+        query = "INSERT INTO player (playerid, name, gender, age, country, club, goals_assists) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         mycursor.execute(query, (
-            playeridEntry.get(), nameEntry.get(), emailEntry.get(), genderEntry.get(), dobEntry.get()
+            playeridEntry.get(), nameEntry.get(), genderEntry.get(), ageEntry.get(), countryEntry.get(), clubEntry.get(), goals_assistsEntry.get()
         ))
         con.commit()
         messagebox.showinfo("Success", "Player Added Successfully!", parent=screen)
@@ -196,13 +212,17 @@ def add_data():
     except pymysql.err.IntegrityError:
         messagebox.showerror("Error", "Player ID already exists!", parent=screen)
 
+
 # Main GUI
-root = ThemedTk(theme="black")
+root = ThemedTk(theme=" black")
 root.geometry("1174x680+0+0")
 root.resizable(0, 0)
 root.title("FOOTBALL PLAYER MANAGEMENT SYSTEM")
 
-datetimeLabel = Label(root, text="Loading...", font=("Times New Roman", 20, "bold"))
+
+root.configure(bg="cornflowerblue") 
+
+datetimeLabel = Label(root, text="Loading...", font=("Times New Roman", 20, "bold"), bg="#5C6BC0", fg="white")
 datetimeLabel.place(x=5, y=5)
 
 def clock():
@@ -212,47 +232,65 @@ def clock():
 
 clock()
 
+# Create the center sliding text
+slider_text = Label(root, text="Welcome to Football Management System! ", font=("Arial", 18), fg="white", bg="#5C6BC0")
+slider_text.place(x=350, y=10)
 
-addplayerButton = ttk.Button(root, text="Add Player", width=20, state=DISABLED, command=lambda:toplevel_data("Add player","Add ",add_data))
+def slide_text():
+    current_x = slider_text.winfo_x()
+    if current_x > 1174:
+        slider_text.place(x=-slider_text.winfo_width())
+    else:
+        slider_text.place(x=current_x + 5, y=10)
+    root.after(100, slide_text)
+
+slide_text()
+
+addplayerButton = ttk.Button(root, text="Add Player", width=20, state=DISABLED, command=lambda:toplevel_data("Add player", "Add ", add_data))
 addplayerButton.place(x=50, y=80)
 
 showplayerButton = ttk.Button(root, text="Show Players", width=20, state=DISABLED, command=show_player)
 showplayerButton.place(x=50, y=150)
 
-updateplayerButton = ttk.Button(root, text="Update Player", width=20, state=DISABLED, command=lambda:toplevel_data("Update player","Update",update_data))
+updateplayerButton = ttk.Button(root, text="Update Player", width=20, state=DISABLED, command=lambda:toplevel_data("Update player", "Update", update_data))
 updateplayerButton.place(x=50, y=220)
 
 deleteplayerButton = ttk.Button(root, text="Delete Player", width=20, state=DISABLED, command=delete_player)
 deleteplayerButton.place(x=50, y=290)
 
-searchplayerButton = ttk.Button(root, text="Search Player", width=20, state=DISABLED, command=lambda:toplevel_data("Search player","Search",search_data))
+searchplayerButton = ttk.Button(root, text="Search Player", width=20, state=DISABLED, command=lambda:toplevel_data("Search player", "Search", search_data))
 searchplayerButton.place(x=50, y=360)
 
-exportplayerButton = ttk.Button(root, text="Export Data", width=20, state=DISABLED)
+exportplayerButton = ttk.Button(root, text="Export Data", width=20, state=DISABLED, command=export_data)
 exportplayerButton.place(x=50, y=430)
 
-exitButton = ttk.Button(root, text="Exit", width=20, state=DISABLED,command=iexit)
-exitButton.place(x=50, y=430)
+exitButton = ttk.Button(root, text="Exit", width=20, state=DISABLED, command=iexit)
+exitButton.place(x=50, y=500)
 
-ttk.Button(root, text="Connect to Database", command=connect_database).place(x=50, y=500)
+ttk.Button(root, text="Connect to Database", command=connect_database).place(x=50, y=550)
+rightFrame=Frame(root)
+rightFrame.place(x=350,y=80,width=820,height=600)
+
+ScrollbarX=Scrollbar(rightFrame,orient=HORIZONTAL)
+
+ScrollbarY=Scrollbar(rightFrame,orient=VERTICAL)
+playerTable = ttk.Treeview(rightFrame, columns=("playerid", "name", "gender", "age", "country", "club", "goals_assists"), height=15, show="headings" ,xscrollcommand=ScrollbarX.set,yscrollcommand=ScrollbarY.set)
+ScrollbarX.config(command=playerTable.xview)
+ScrollbarY.config(command=playerTable.yview)
+ScrollbarX.pack(side=BOTTOM,fill=X)
+ScrollbarY.pack(side=RIGHT,fill=Y)
+
+playerTable.pack(fill=BOTH, expand=1)
 
 
-playerTable = ttk.Treeview(root, columns=("playerid", "name", "email", "gender", "dob"), height=15, show="headings")
-playerTable.place(x=350, y=80)
 
 playerTable.heading("playerid", text="Player ID")
 playerTable.heading("name", text="Name")
-playerTable.heading("email", text="Email")
 playerTable.heading("gender", text="Gender")
-playerTable.heading("dob", text="DOB")
+playerTable.heading("age", text="Age")
+playerTable.heading("country", text="Country")
+playerTable.heading("club", text="Club")
+playerTable.heading("goals_assists", text="Goals/Assists")
 
-
-vertical_scroll = ttk.Scrollbar(root, orient="vertical", command=playerTable.yview)
-vertical_scroll.place(x=1050, y=80, height=350)
-playerTable.config(yscrollcommand=vertical_scroll.set)
-
-horizontal_scroll = ttk.Scrollbar(root, orient="horizontal", command=playerTable.xview)
-horizontal_scroll.place(x=350, y=470, width=700)
-playerTable.config(xscrollcommand=horizontal_scroll.set)
 
 root.mainloop()

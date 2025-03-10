@@ -3,100 +3,96 @@ import tkinter as tk
 import pymysql
 from PIL import Image, ImageTk  
 from tkinter import messagebox
+import subprocess
 
-# Create main window
+# Function to handle Admin Login (opens fb.py after correct credentials)
+def admin_login():
+    # Show message prompting the admin to fill in the details
+    messagebox.showinfo("Admin Login", "Please fill in the admin details")
+    
+    # Make the existing login form visible for the admin
+    usernameLabel.config(text="Admin Username")  # Change label text to Admin Username
+    passwordLabel.config(text="Admin Password")  # Change label text to Admin Password
+    loginbutton.config(command=verify_admin_credentials)  # Modify the login button to verify admin credentials
 
-# image = Image.open("logo.jpeg")  
-# image = image.resize((50, 50))  
-# logo = ImageTk.PhotoImage(image)
-# # Title Label
-# label = tk.Label(
-#     window, 
-#     text="WELCOME TO FOOTBALL PLAYER STATS",
-#     font=("Times New Roman", 25), 
-#     bd=12, 
-#     relief=tk.GROOVE, 
-#     fg="white",
-#     bg="blue",
-#     image=logo,
-#     compound="left",
-#     padx=5,
-#     pady=5
-# )
-# label.pack(fill=tk.X)
+# Function to verify Admin Credentials (with the existing form)
+def verify_admin_credentials():
+    admin_username = usernamentry.get()
+    admin_password = passwordentry.get()
 
-# # Player Details Frame
-# details = tk.LabelFrame(
-#     window, 
-#     text="Enter Player Details",
-#     font=("Roboto Serif", 20), 
-#     bd=15, 
-#     relief=tk.GROOVE, 
-#     bg="blue",
-#     fg="white"
-# )
-# details.place(x=50,y=95,width=420,height=540)
+    # Admin credentials (replace with your actual admin credentials)
+    if admin_username == "admin" and admin_password == "admin123":
+        messagebox.showinfo("Success", "Admin Login Successful")
+        subprocess.run(['python', 'fb.py'])  # Open fb.py after successful login
+    else:
+        # Sophisticated message when incorrect admin credentials are entered
+        messagebox.showerror("Access Denied", 
+                             "You're not an admin. Please try User Login instead.")
+        # Optionally, reset the fields or leave them as they are for further attempts
+        usernamentry.delete(0, tk.END)
+        passwordentry.delete(0, tk.END)
 
-# data_frame=tk.LabelFrame(window,bd=12,bg="blue",relief=tk.GROOVE)
-# data_frame.place(x=480,y=95,width=850,height=540)
-# # Run the GUI
-# window.mainloop()
-
-#login as temp
+# Function to handle User Login (opens sign_in.py)
+def user_login():
+    subprocess.run(['python', 'sign_in.py'])  # Opens sign_in.py for User
+    
+# Function to handle login (for the main window)
 def login():
-    if  usernamentry.get()=="" or passwordentry.get()=="":
-        messagebox.showerror("Error","Please fill the details")
-    elif usernamentry.get()=="MESSI" and passwordentry.get()=="10":
-        messagebox.showinfo("FOOTBALL PLAYER STATISTICS","WELCOME") 
-        import fb
+    if usernamentry.get() == "" or passwordentry.get() == "":
+        messagebox.showerror("Error", "Please fill the details")
+    elif usernamentry.get() == "MESSI" and passwordentry.get() == "10":
+        messagebox.showinfo("FOOTBALL PLAYER STATISTICS", "WELCOME") 
+    else:
+        messagebox.showerror("Error", "Invalid username or password")
 
-
-
-
-
-
-
-
-
-
-
+# Setting up the main window
 window = tk.Tk()
 window.title("FOOTBALL PLAYER STATISTICS")
 window.geometry("1350x700+0+0")
 
-
+# Background Image
 background = Image.open("back.jpg")  
 background = background.resize((1350, 700))  
 background = ImageTk.PhotoImage(background)
 bgLabel = tk.Label(window, image=background)
-bgLabel.place(x=0, y=0, )  
-
+bgLabel.place(x=0, y=0)  
 bgLabel.image = background  
 
+# Frame for login form
 loginFrame = tk.Frame(window, width=300, height=200, bg="white")
 loginFrame.place(x=525, y=250)  
 loginFrame.pack_propagate(False)
-logoImage=tk.PhotoImage(file="football.png")
-logolabel=tk.Label(loginFrame,image=logoImage)
-logolabel.grid(row=0,column=0,columnspan=2,padx=10)
 
+# Logo Image
+logoImage = tk.PhotoImage(file="football.png")
+logolabel = tk.Label(loginFrame, image=logoImage)
+logolabel.grid(row=0, column=0, columnspan=2, padx=10)
 
-usernameimage=tk.PhotoImage(file="user.png")
-usernameLabel=tk.Label(loginFrame,image= usernameimage,text="username",compound="left",font=("times new roman",20,"bold"))
-usernameLabel.grid(row=1,column=0,padx=10)
-usernamentry=tk.Entry(loginFrame,font=("times new roman",20,"bold"),bd=7,width=15)
-usernamentry.grid(row=1,column=1)
+# Username input field
+usernameimage = tk.PhotoImage(file="user.png")
+usernameLabel = tk.Label(loginFrame, image=usernameimage, text="Username", compound="left", font=("times new roman", 20, "bold"))
+usernameLabel.grid(row=1, column=0, padx=10)
+usernamentry = tk.Entry(loginFrame, font=("times new roman", 20, "bold"), bd=7, width=15)
+usernamentry.grid(row=1, column=1)
 
+# Password input field
+passwordimage = tk.PhotoImage(file="padlock.png")
+passwordLabel = tk.Label(loginFrame, image=passwordimage, text="Password", compound="left", font=("times new roman", 20, "bold"))
+passwordLabel.grid(row=2, column=0, padx=10)
+passwordentry = tk.Entry(loginFrame, font=("times new roman", 20, "bold"), bd=7, width=15)
+passwordentry.grid(row=2, column=1)
 
+# Main Login Button (Initially handles the user login)
+loginbutton = tk.Button(loginFrame, text="Login", font=("times new roman", 10, "bold"), width=12, fg="white", bg="royal blue", cursor="hand2", command=login)
+loginbutton.grid(row=3, column=1, pady=10)
 
-passwordimage=tk.PhotoImage(file="padlock.png")
-passwordLabel=tk.Label(loginFrame,image= passwordimage,text="Password",compound="left",font=("times new roman",20,"bold"))
-passwordLabel.grid(row=2,column=0,padx=10)
-passwordentry=tk.Entry(loginFrame,font=("times new roman",20,"bold"),bd=7,width=15)
-passwordentry.grid(row=2,column=1)
+# Admin Login Button (opens Admin login form first)
+admin_login_button = tk.Button(loginFrame, text="Admin Login", font=("times new roman", 10, "bold"), width=12, fg="white", bg="dark green", cursor="hand2", command=admin_login)
+admin_login_button.grid(row=4, column=0, pady=10)
 
+# User Login Button (opens sign_in.py)
+user_login_button = tk.Button(loginFrame, text="User Login", font=("times new roman", 10, "bold"), width=12, fg="white", bg="dark red", cursor="hand2", command=user_login)
+user_login_button.grid(row=4, column=1, pady=10)
 
-loginbutton=tk.Button(loginFrame,text="Login",font=("times new roman",10,"bold"),width=12,fg="white",bg="royal blue",cursor="hand2",command=login)
-loginbutton.grid(row=3,column=1,pady=10)
 # Run the GUI
 window.mainloop()

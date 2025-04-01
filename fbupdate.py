@@ -214,11 +214,11 @@ def add_data():
 
 
 # Main GUI
-root = ThemedTk(theme="black")  # Change the theme here
+root = ThemedTk(theme="black")  
 root.geometry("1174x680+0+0")
 root.resizable(0, 0)
 root.title("FOOTBALL PLAYER MANAGEMENT SYSTEM")
-root.configure(bg="#0f172a")  # Set background color to match black theme
+root.configure(bg="#0f172a")  
 
 datetimeLabel = Label(root, text="Loading...", font=("Times New Roman", 20, "bold"), bg="#0f172a", fg="#22c55e")
 datetimeLabel.place(x=5, y=5)
@@ -230,7 +230,7 @@ def clock():
 
 clock()
 
-# Create the center sliding text
+
 slider_text = Label(root, text="Welcome to Football Management System! ", font=("Arial", 18), fg="#22c55e", bg="#0f172a")
 slider_text.place(x=350, y=10)
 

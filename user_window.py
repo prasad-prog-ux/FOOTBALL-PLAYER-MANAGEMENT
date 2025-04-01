@@ -5,7 +5,7 @@ import wikipediaapi
 from PIL import Image, ImageTk
 import csv
 
-# Initialize Wikipedia API
+#wiki api start
 wiki = wikipediaapi.Wikipedia(language='en', user_agent='YourAppName/1.0')
 
 def connect_database():
@@ -50,7 +50,7 @@ def ask_feedback():
             finally:
                 conn.close()
         
-        feedback_window.destroy()  # Close feedback window only
+        feedback_window.destroy()  
 
     tk.Button(feedback_window, text="Submit", command=submit_feedback, bg="#22c55e", fg="black", font=("Helvetica", 12, "bold")).pack(pady=10)
     tk.Button(feedback_window, text="Skip", command=feedback_window.destroy, bg="gray", fg="white", font=("Helvetica", 12, "bold")).pack()

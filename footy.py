@@ -9,9 +9,9 @@ DB_HOST = 'localhost'
 DB_USER = 'root'
 DB_PASSWORD = 'root'
 DB_NAME = 'footy_db'
-DB_PORT = 3308  # Ensure the correct port is used
+DB_PORT = 3308  
 
-# Function to get database connection
+
 def get_connection():
     return mysql.connector.connect(
         host=DB_HOST,
@@ -22,7 +22,7 @@ def get_connection():
         charset='utf8'
     )
 
-# Function for Admin Login
+
 def admin_login():
     uname = username.get()
     pwd = password.get()
@@ -34,33 +34,33 @@ def admin_login():
     else:
         messagebox.showerror("Login Failed", "Invalid Admin Credentials")
 
-# Function to open the signup.py-based login system
+
 def open_signup_login():
-    root.destroy()  # Close current login window
+    root.destroy() 
     try:
-        subprocess.run(['python', 'signin.py'])  # Open signup-based login system
+        subprocess.run(['python', 'signin.py'])  
     except FileNotFoundError:
         messagebox.showerror("Error", "signin.py file not found! Make sure it's in the same directory.")
 
-# Function to show progress bar before login
+
 def show_progress():
     loading_label = tk.Label(root, text="Loading...", font=("Helvetica", 20, "bold"), fg="#22c55e", bg="#0f172a")
-    loading_label.place(relx=0.5, rely=0.4, anchor="center")  # Center the text
+    loading_label.place(relx=0.5, rely=0.4, anchor="center")  
 
     progress = ttk.Progressbar(root, orient="horizontal", length=400, mode="determinate", style="green.Horizontal.TProgressbar")
-    progress.place(relx=0.5, rely=0.5, anchor="center")  # Center the progress bar
+    progress.place(relx=0.5, rely=0.5, anchor="center")  
     root.update()
 
     for i in range(101):
         progress["value"] = i
         root.update_idletasks()
-        root.after(30)  # Smooth loading effect (3 seconds total)
+        root.after(30)  
 
     loading_label.destroy()
     progress.destroy()
-    show_login_frame()  # Show login screen after loading
+    show_login_frame()  
 
-# Function to display login form
+
 def show_login_frame():
     global username, password
 
@@ -95,12 +95,12 @@ root = tk.Tk()
 root.title("Footy Login")
 root.geometry("1350x700+0+0")
 
-# Custom Progress Bar Style
+
 style = ttk.Style()
 style.theme_use("clam")
 style.configure("green.Horizontal.TProgressbar", troughcolor="#1e293b", background="#22c55e", thickness=10)
 
-# Background Image
+
 bg_image = Image.open("back_fb.jpg")  
 bg_image = bg_image.resize((1350, 700))  
 bg_photo = ImageTk.PhotoImage(bg_image)
@@ -108,7 +108,7 @@ bg_label = tk.Label(root, image=bg_photo)
 bg_label.image = bg_photo
 bg_label.place(x=0, y=0)  
 
-# Show Progress Bar First, Then Login Frame
+#for progrwess
 show_progress()
 
 # Run

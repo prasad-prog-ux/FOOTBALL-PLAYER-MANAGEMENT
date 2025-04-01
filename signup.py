@@ -16,14 +16,14 @@ def clear():
     emailEntry.delete(0, END)
     usernameEntry.delete(0, END)
     passwordEntry.delete(0, END)
-    confirmEntry.delete(0, END)  # Fixed: Now confirmEntry exists
+    confirmEntry.delete(0, END)  
     check.set(0)
 
 def connect_database():
     email = emailEntry.get()
     username = usernameEntry.get()
     password = passwordEntry.get()
-    confirm_password = confirmEntry.get()  # Fixed: Now confirmEntry is defined
+    confirm_password = confirmEntry.get()  
 
     if not email or not username or not password or not confirm_password:
         messagebox.showerror("Error", "All fields are required")
@@ -80,7 +80,7 @@ signup_window.geometry("990x660+50+50")
 signup_window.resizable(0, 0)
 signup_window.configure(bg="#0f172a")
 
-# Load and Resize Background Image
+
 bg_image = Image.open("football1.jpg")
 bg_image = bg_image.resize((990, 660), Image.LANCZOS)
 background = ImageTk.PhotoImage(bg_image)
@@ -122,7 +122,7 @@ passwordEntry.grid(row=8, column=0, sticky="w", padx=25)
 frame3 = Frame(frame, width=250, height=2, bg="#22c55e")
 frame3.grid(row=9, column=0, sticky="w", padx=25)
 
-# **Confirm Password (FIXED)**
+
 confirmLabel = Label(frame, text="Confirm Password", font=("Helvetica", 10, "bold"), bg="#0f172a", fg="#22c55e")
 confirmLabel.grid(row=10, column=0, sticky="w", padx=25, pady=(10, 0))
 confirmEntry = Entry(frame, width=25, font=("Helvetica", 10, "bold"), fg="white", bg="#1e293b", bd=0, show="*")
@@ -131,7 +131,7 @@ confirmEntry.grid(row=11, column=0, sticky="w", padx=25)
 frame4 = Frame(frame, width=250, height=2, bg="#22c55e")
 frame4.grid(row=12, column=0, sticky="w", padx=25)
 
-# Terms and Conditions
+# Terms 
 check = IntVar()
 terms = Checkbutton(frame, text="I agree to Terms & Conditions", font=("Helvetica", 9, "bold"), fg="#22c55e", bg="#0f172a", variable=check)
 terms.grid(row=13, column=0, padx=15, pady=10)

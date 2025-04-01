@@ -117,11 +117,11 @@ login_window.geometry("990x660+50+50")
 login_window.resizable(0, 0)
 login_window.title("Login Page")
 login_window.configure(bg="#0f172a")
-bg_image = Image.open("back.jpg")  # Ensure this image exists
+bg_image = Image.open("back.jpg")  
 bg_image = bg_image.resize((990, 660), Image.LANCZOS)
 background = ImageTk.PhotoImage(bg_image)
 
-# Add Background Image to Window
+
 bg_label = Label(login_window, image=background)
 bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 

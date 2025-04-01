@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk  # Added ttk for progress bar
 import mysql.connector
 from PIL import Image, ImageTk  
 import subprocess  # To run external Python scripts
@@ -42,43 +42,74 @@ def open_signup_login():
     except FileNotFoundError:
         messagebox.showerror("Error", "signin.py file not found! Make sure it's in the same directory.")
 
+# Function to show progress bar before login
+def show_progress():
+    loading_label = tk.Label(root, text="Loading...", font=("Helvetica", 20, "bold"), fg="#22c55e", bg="#0f172a")
+    loading_label.place(relx=0.5, rely=0.4, anchor="center")  # Center the text
+
+    progress = ttk.Progressbar(root, orient="horizontal", length=400, mode="determinate", style="green.Horizontal.TProgressbar")
+    progress.place(relx=0.5, rely=0.5, anchor="center")  # Center the progress bar
+    root.update()
+
+    for i in range(101):
+        progress["value"] = i
+        root.update_idletasks()
+        root.after(30)  # Smooth loading effect (3 seconds total)
+
+    loading_label.destroy()
+    progress.destroy()
+    show_login_frame()  # Show login screen after loading
+
+# Function to display login form
+def show_login_frame():
+    global username, password
+
+    # Login Frame
+    loginFrame = tk.Frame(root, width=350, height=400, bg="#0f172a")
+    loginFrame.place(relx=0.5, rely=0.5, anchor="center")  # Center the frame
+    loginFrame.pack_propagate(False)
+
+    # Title
+    tk.Label(loginFrame, text="Footy Stats Login", font=("Helvetica", 24, 'bold'), fg="#22c55e", bg="#0f172a").pack(pady=20)
+
+    # Username & Password Fields
+    username = tk.StringVar()
+    password = tk.StringVar()
+
+    style = {'font': ("Helvetica", 14), 'bg': "#1e293b", 'fg': "#e2e8f0", 'insertbackground': 'white'}
+
+    tk.Label(loginFrame, text="Username:", font=("Helvetica", 12), bg="#0f172a", fg="#cbd5e1").pack(pady=(5, 0))
+    tk.Entry(loginFrame, textvariable=username, **style, width=25, relief='flat').pack(pady=5)
+
+    tk.Label(loginFrame, text="Password:", font=("Helvetica", 12), bg="#0f172a", fg="#cbd5e1").pack(pady=(10, 0))
+    tk.Entry(loginFrame, textvariable=password, show="*", **style, width=25, relief='flat').pack(pady=5)
+
+    # Buttons for Admin and User Login
+    btn_style = {'font': ("Helvetica", 12), 'width': 20, 'padx': 10, 'pady': 5}
+
+    tk.Button(loginFrame, text="Admin Login", bg="#dc2626", fg="white", command=admin_login, **btn_style).pack(pady=10)
+    tk.Button(loginFrame, text="User Login", bg="#22c55e", fg="white", command=open_signup_login, **btn_style).pack(pady=5)
+
 # Root Window
 root = tk.Tk()
 root.title("Footy Login")
 root.geometry("1350x700+0+0")
+
+# Custom Progress Bar Style
+style = ttk.Style()
+style.theme_use("clam")
+style.configure("green.Horizontal.TProgressbar", troughcolor="#1e293b", background="#22c55e", thickness=10)
 
 # Background Image
 bg_image = Image.open("back_fb.jpg")  
 bg_image = bg_image.resize((1350, 700))  
 bg_photo = ImageTk.PhotoImage(bg_image)
 bg_label = tk.Label(root, image=bg_photo)
+bg_label.image = bg_photo
 bg_label.place(x=0, y=0)  
 
-# Login Frame
-loginFrame = tk.Frame(root, width=350, height=400, bg="#0f172a")
-loginFrame.place(x=500, y=180)
-loginFrame.pack_propagate(False)
-
-# Title
-tk.Label(loginFrame, text="Footy stats Login", font=("Helvetica", 24, 'bold'), fg="#22c55e", bg="#0f172a").pack(pady=20)
-
-# Username & Password Fields
-username = tk.StringVar()
-password = tk.StringVar()
-
-style = {'font': ("Helvetica", 14), 'bg': "#1e293b", 'fg': "#e2e8f0", 'insertbackground': 'white'}
-
-tk.Label(loginFrame, text="Username:", font=("Helvetica", 12), bg="#0f172a", fg="#cbd5e1").pack(pady=(5, 0))
-tk.Entry(loginFrame, textvariable=username, **style, width=25, relief='flat').pack(pady=5)
-
-tk.Label(loginFrame, text="Password:", font=("Helvetica", 12), bg="#0f172a", fg="#cbd5e1").pack(pady=(10, 0))
-tk.Entry(loginFrame, textvariable=password, show="*", **style, width=25, relief='flat').pack(pady=5)
-
-# Buttons for Admin and User Login
-btn_style = {'font': ("Helvetica", 12), 'width': 20, 'padx': 10, 'pady': 5}
-
-tk.Button(loginFrame, text="Admin Login", bg="#dc2626", fg="white", command=admin_login, **btn_style).pack(pady=10)
-tk.Button(loginFrame, text="User Login", bg="#22c55e", fg="white", command=open_signup_login, **btn_style).pack(pady=5)
+# Show Progress Bar First, Then Login Frame
+show_progress()
 
 # Run
 root.mainloop()

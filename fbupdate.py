@@ -262,7 +262,8 @@ searchplayerButton.place(x=50, y=360)
 exportplayerButton = ttk.Button(root, text="Export Data", width=20, state=DISABLED, command=export_data)
 exportplayerButton.place(x=50, y=430)
 
-exitButton = ttk.Button(root, text="Exit", width=20, state=DISABLED, command=iexit)
+exitButton = ttk.Button(root, text="Exit", width=20, command=iexit)
+
 exitButton.place(x=50, y=500)
 
 ttk.Button(root, text="Connect to Database", command=connect_database).place(x=50, y=550)

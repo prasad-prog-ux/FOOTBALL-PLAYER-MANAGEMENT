@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import csv
 
 #wiki api start
-wiki = wikipediaapi.Wikipedia(language='en', user_agent='YourAppName/1.0')
+wiki = wikipediaapi.Wikipedia(language='en', user_agent='FootyStats/1.0')
 
 def connect_database():
     try:

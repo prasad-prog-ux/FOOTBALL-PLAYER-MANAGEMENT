@@ -12,54 +12,56 @@ def login_page():
 
 def forget_password():
     def new_password():
-        if user_enter.get() == "" or new_password.get() == "" or confirmpass_entry.get() == "":
+        if username_entry.get() == "" or passwordnew_entry.get() == "" or confirmpass_entry.get() == "":
             messagebox.showerror("Error", "All Fields are Required", parent=window)
-        elif new_password.get() != confirmpass_entry.get():
+        elif passwordnew_entry.get() != confirmpass_entry.get():
             messagebox.showerror("Error", "Password and confirm password are not same", parent=window)
         else:
             con = pymysql.connect(host="localhost", user="root", password="root", database="userdata")
             mycursor = con.cursor()
-            query = "select * from data where username =%s"
-            mycursor.execute(query, (user_enter.get(),))
+            query = "SELECT * FROM data WHERE username = %s"
+            mycursor.execute(query, (username_entry.get(),))
             row = mycursor.fetchone()
             if row is None:
                 messagebox.showerror("Error", "Incorrect username", parent=window)
             else:
-                query = "update data set password=%s where username=%s" 
-                mycursor.execute(query, (new_password.get(), user_enter.get()))
+                query = "UPDATE data SET password=%s WHERE username=%s" 
+                mycursor.execute(query, (passwordnew_entry.get(), username_entry.get()))
                 con.commit()
                 con.close()
-                messagebox.showinfo("Success", "Password changed successfully")
-                window.destroy()
+                messagebox.showinfo("Success", "Password changed successfully", parent=window)
+                window.destroy()  # Ensure the window closes after success
 
     window = Toplevel()
     window.title("Change Password")
     window.configure(bg="#0f172a")  
+    window.geometry("400x400")
 
     heading_label = Label(window, text="RESET PASSWORD", font=("Helvetica", 24, "bold"), bg="#0f172a", fg="#22c55e")
-    heading_label.place(x=480, y=60)
+    heading_label.place(x=60, y=20)
 
     username_label = Label(window, text="Username", font=("Helvetica", 14, "bold"), bg="#0f172a", fg="#22c55e")
-    username_label.place(x=470, y=130)
+    username_label.place(x=30, y=80)
 
     username_entry = Entry(window, width=25, font=("Helvetica", 14, "bold"), fg="#22c55e", bg="#0f172a", bd=0)
-    username_entry.place(x=470, y=160)
+    username_entry.place(x=30, y=110)
 
     passwordnew_label = Label(window, text="New Password", font=("Helvetica", 14, "bold"), bg="#0f172a", fg="#22c55e")
-    passwordnew_label.place(x=470, y=210)
+    passwordnew_label.place(x=30, y=150)
 
     passwordnew_entry = Entry(window, width=25, font=("Helvetica", 14, "bold"), fg="#22c55e", bg="#0f172a", bd=0)
-    passwordnew_entry.place(x=470, y=240)
+    passwordnew_entry.place(x=30, y=180)
 
     confirmpass_label = Label(window, text="Confirm Password", font=("Helvetica", 14, "bold"), bg="#0f172a", fg="#22c55e")
-    confirmpass_label.place(x=470, y=290)
+    confirmpass_label.place(x=30, y=220)
 
     confirmpass_entry = Entry(window, width=25, font=("Helvetica", 14, "bold"), fg="#22c55e", bg="#0f172a", bd=0)
-    confirmpass_entry.place(x=470, y=320)
+    confirmpass_entry.place(x=30, y=250)
 
     submitButton = Button(window, text="Submit", fg="white", bg="#22c55e", font=("Helvetica", 16, "bold"), 
                           activebackground="lightgreen", cursor="hand2", bd=0, width=19, command=new_password)
-    submitButton.place(x=470, y=390)
+    submitButton.place(x=30, y=300)
+
 
 def login_user():
     if usernameEntry.get() == "" or passwordEntry.get() == "":

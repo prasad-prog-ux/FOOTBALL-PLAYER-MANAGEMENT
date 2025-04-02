@@ -56,7 +56,10 @@ def ask_feedback():
     tk.Button(feedback_window, text="Skip", command=feedback_window.destroy, bg="gray", fg="white", font=("Helvetica", 12, "bold")).pack()
 
 def on_close():
-    ask_feedback()
+    if messagebox.askyesno("Feedback", "Would you like to provide feedback?"):
+        ask_feedback()
+    else:
+        root.destroy()
 
 def show_loading_screen():
     loading_frame = tk.Frame(root, bg="#0f172a")
